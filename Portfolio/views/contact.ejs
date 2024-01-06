@@ -1,9 +1,9 @@
-<div class="contact">
+<div class="contact" id="contact">
     <h1>CONTACT</h1>
     <p style="margin-bottom: 100px;"> Feel free to Contact me by submitting the form below and I will get back to you as soon as possible </p>
 
     <div class="contact-form">
-        <form method="post">
+        <form method="post" id="submit-form">
             <div class="form-field">
                 <label>Name</label>
                 <input required placeholder="Enter your Name" type="text" id="name" />
@@ -19,4 +19,40 @@
             <button type="submit">Submit</button>
         </form>
     </div>
+    <script>
+        document.getElementById("submit-form").addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            // Collecting form information
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            // Sending data collected from form to the server
+            fetch("/submit-form", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name, email, message })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                alert("Submitted successfully!");
+                document.getElementById("submit-form").reset();
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Error submitting data, Please try again!");
+            });
+        });
+    </script>
 </div>
